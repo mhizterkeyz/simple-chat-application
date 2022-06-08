@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import { useAppLogic } from "./hooks/use-app-logic.hook";
+import StartPage from "./pages";
+import ChatsPage from "./pages/chats";
+import SingleChatPage from "./pages/chats/[id]";
 
 function App() {
+  const { user, loading, setUser } = useAppLogic();
+  if (loading) {
+    return null;
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/chats/:id" element={<SingleChatPage user={user} />} />
+        <Route path="/chats" element={<ChatsPage user={user} />} />
+        <Route path="*" element={<StartPage setUser={setUser} user={user} />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
-export default App;
+export default React.memo(App);
